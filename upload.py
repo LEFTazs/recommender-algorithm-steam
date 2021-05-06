@@ -14,6 +14,7 @@ upload = Blueprint('upload', __name__)
 
 @upload.route('/upload')  # TODO: this should be restricted
 def upload_method():
+    COLLECT_FROM = 12471
     MAX_TO_COLLECT = 30
 
     api_client = http.client.HTTPSConnection("api.steampowered.com")
@@ -33,6 +34,8 @@ def upload_method():
     answers = []
     review_answers = []
     for appId in appIds:
+        if appId < COLLECT_FROM:
+            continue
         try:
             store_client.request("GET", "/api/appdetails?appids={}".format(appId))
             response = store_client.getresponse()
