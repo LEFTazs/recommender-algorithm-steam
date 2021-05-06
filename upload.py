@@ -1,20 +1,19 @@
 # main.py
 
-from flask import Blueprint, render_template
-from flask_login import login_required, current_user
+from flask import Blueprint
 import http.client
 import json
 
-from .models import Game, Tag
+from .models import Game, Genre
 from . import db
 
 
 upload = Blueprint('upload', __name__)
 
 
-@upload.route('/upload')  # TODO: this should be restricted
+@upload.route('/upload')  # TODO: this should be restricted, or deleted completely, but I'm just lazy
 def upload_method():
-    COLLECT_FROM = 12471
+    COLLECT_FROM = 46271
     MAX_TO_COLLECT = 30
 
     api_client = http.client.HTTPSConnection("api.steampowered.com")
@@ -65,10 +64,10 @@ def upload_method():
                             num_of_positive_reviews=review_answer["total_positive"],
                             num_of_negative_reviews=review_answer["total_negative"])
             db.session.add(new_game)
-            tags = [category["description"] for category in answer["categories"]]
-            for tag_name in tags:
-                new_tag = Tag(app_id=answer["steam_appid"], name=tag_name)
-                db.session.add(new_tag)
+            genres = [category["description"] for category in answer["genres"]]
+            for genre_name in genres:
+                new_genre = Genre(app_id=answer["steam_appid"], name=genre_name)
+                db.session.add(new_genre)
             app_ids.append(answer["steam_appid"])
     db.session.commit()
 

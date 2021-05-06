@@ -33,31 +33,30 @@ class Recommender:
                 user_activity_game = self.__get_game_by_id(activity.game_id)
                 if user_activity_game.id == game.id:
                     continue
-                positive_proportion = self.__get_review_score_for_game(user_activity_game)
-                similarity = self.__get_tag_similarity(game, user_activity_game)
-                delta = self.__get_delta_for_activity(activity)
-                score = (similarity + delta) * positive_proportion
-                if score > max_score:
-                    max_score = score
+                similarity = self.__get_genre_similarity(game, user_activity_game)
+                page_visit_score = self.__get_page_visit_scores(activity)
+                delta = self.__get_delta(activity, user_activity_game)
+                score = (similarity + page_visit_score) * delta
+                max_score += score
             game_scores[game] = max_score
         return game_scores
 
-    def __get_review_score_for_game(self, user_activity_game):
+    def __get_delta(self, activity, user_activity_game):
+        today = datetime.datetime.today()
+        days_since_last_activity = (today - activity.last_update).total_seconds() / 60 / 60 / 24
         positive_proportion = \
             user_activity_game.num_of_positive_reviews / (user_activity_game.num_of_positive_reviews + user_activity_game.num_of_negative_reviews)
-        return positive_proportion
+        return (1/days_since_last_activity + positive_proportion)/2
 
-    def __get_delta_for_activity(self, activity):
-        today = datetime.datetime.today()
-        days_since_last_activity = ceil((today - activity.last_update).total_seconds()/60/60/24)
-        delta = (1/days_since_last_activity) * (activity.page_entries + activity.steam_store_visits * 2)
-        return delta
+    def __get_page_visit_scores(self, activity):
+        page_visit_score = (1 if activity.page_entries > 0 else 0) + (1 if activity.steam_store_visits > 0 else 0) * 2
+        return page_visit_score
 
-    def __get_tag_similarity(self, game1, game2):
+    def __get_genre_similarity(self, game1, game2):
         similarity = 0
-        for tag1 in game1.tags:
-            for tag2 in game2.tags:
-                if tag1.name == tag2.name:
+        for genre1 in game1.genres:
+            for genre2 in game2.genres:
+                if genre1.name == genre2.name:
                     similarity += 1
         return similarity
 

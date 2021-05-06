@@ -25,10 +25,10 @@
               {{ game.description | safe }}
               <br>
               <div class="product_meta">
-                  <span class="tagged_as"><strong>Tags:</strong>
+                  <span class="tagged_as"><strong>Genres:</strong>
                     <br>
-                    {% for tag in game.tags %}
-                      <a rel="tag" href="#">{{ tag.name }}</a><br>
+                    {% for genre in game.genres %}
+                      <a rel="tag" href="#">{{ genre.name }}</a><br>
                     {% endfor %}
                   </span>
               </div>
