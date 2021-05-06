@@ -32,6 +32,17 @@
                     {% endfor %}
                   </span>
               </div>
+              <p></p>
+              <strong>Reviews:</strong>
+              <div class="container">
+                  <div style="float: left; margin-right: 1em;">Positive reviews: {{ game.num_of_positive_reviews }}</div>
+                  <div style="float: right; margin-right: 1em;">Negative reviews: {{ game.num_of_negative_reviews }}</div>
+                  <div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{ game.num_of_positive_reviews/(game.num_of_negative_reviews+game.num_of_positive_reviews)*100 }}%"></div>
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: {{ game.num_of_negative_reviews/(game.num_of_negative_reviews+game.num_of_positive_reviews)*100 }}%"></div>
+                  </div>
+              </div>
+              <p></p>
               <div class="m-bot15"> <strong>Price : </strong> <span class="pro-price">
                   {% if game.price == 0.0 %}
                       Free
@@ -39,6 +50,7 @@
                       {{ game.price / 100 }} {{ game.price_currency }}
                   {% endif %}
               </span></div>
+              <p></p>
               <p>
                   <a class="btn btn-round btn-danger" role="button" href="/product_steam_page/{{ game.app_id }}"> View on Steam </a>
               </p>
