@@ -3,10 +3,13 @@
 from flask import Blueprint, render_template, redirect
 from flask_login import login_required, current_user
 
+from recommender import Recommender
 from .models import Game, UserActivity
 from . import db
 
 main = Blueprint('main', __name__)
+
+recommender = Recommender()
 
 
 @main.route('/')
@@ -24,8 +27,8 @@ def profile():
 @login_required
 def shop():
     games = Game.query.all()
-    suggested_games = []
-    # TODO: suggest games
+    user_activity = UserActivity.query.filter_by(user_id=current_user.id)
+    suggested_games = recommender.recommend(user_activity, games, 4)
     return render_template('shop.html', games=games, suggested_games=suggested_games)
 
 
