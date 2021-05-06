@@ -46,10 +46,10 @@ class Recommender:
         days_since_last_activity = (today - activity.last_update).total_seconds() / 60 / 60 / 24
         positive_proportion = \
             user_activity_game.num_of_positive_reviews / (user_activity_game.num_of_positive_reviews + user_activity_game.num_of_negative_reviews)
-        return (1/days_since_last_activity + positive_proportion)/2
+        return (1/(1+days_since_last_activity) + positive_proportion)/2
 
     def __get_page_visit_scores(self, activity):
-        page_visit_score = (1 if activity.page_entries > 0 else 0) + (1 if activity.steam_store_visits > 0 else 0) * 2
+        page_visit_score = activity.page_entries + activity.steam_store_visits * 2
         return page_visit_score
 
     def __get_genre_similarity(self, game1, game2):
@@ -58,7 +58,7 @@ class Recommender:
             for genre2 in game2.genres:
                 if genre1.name == genre2.name:
                     similarity += 1
-        return similarity
+        return similarity/float(len(game1.genres) + len(game2.genres))
 
     def __get_game_by_id(self, id):
         for game in self.games:
