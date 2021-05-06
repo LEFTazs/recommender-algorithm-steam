@@ -1,0 +1,53 @@
+<!-- templates/shop.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Steam Store Games
+</h1>
+{% if suggested_games|length != 0 %}
+<h2 class="subtitle">
+  Suggested games
+</h2>
+{% endif %}
+<div class="card-columns">
+{% for game in suggested_games %}
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{ game.header_image_url }}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{ game.name }}</h5>
+        <p class="card-text">
+          {% if game.price == 0.0 %}
+              Free
+          {% else %}
+              {{ game.price / 100 }} {{ game.price_currency }}
+          {% endif %}
+        </p>
+        <a href="/product/{{ game.app_id }}" class="btn btn-primary">Open</a>
+      </div>
+    </div>
+{% endfor %}
+</div>
+<h2 class="subtitle">
+  Featured games
+</h2>
+<div class="card-columns">
+{% for game in games %}
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{ game.header_image_url }}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{ game.name }}</h5>
+        <p class="card-text">
+          {% if game.price == 0.0 %}
+              Free
+          {% else %}
+              {{ game.price / 100 }} {{ game.price_currency }}
+          {% endif %}
+        </p>
+        <a href="/product/{{ game.app_id }}" class="btn btn-primary">Open</a>
+      </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

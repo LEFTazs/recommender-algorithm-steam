@@ -1,0 +1,51 @@
+<!-- templates/product.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  {{ game.name }}
+</h1>
+
+<div class="container bootdey">
+<div class="col-md-12">
+<section class="panel">
+      <div class="panel-body">
+          <div class="col-md-6">
+              <div class="pro-img-details">
+                  <img src="{{ game.header_image_url }}" alt="">
+              </div>
+          </div>
+          <div class="col-md-6">
+              <h4 class="pro-d-title">
+                  <a href="#" class="">
+                      {{ game.name }}
+                  </a>
+              </h4>
+              {{ game.description | safe }}
+              <br>
+              <div class="product_meta">
+                  <span class="tagged_as"><strong>Tags:</strong>
+                    <br>
+                    {% for tag in game.tags %}
+                      <a rel="tag" href="#">{{ tag.name }}</a><br>
+                    {% endfor %}
+                  </span>
+              </div>
+              <div class="m-bot15"> <strong>Price : </strong> <span class="pro-price">
+                  {% if game.price == 0.0 %}
+                      Free
+                  {% else %}
+                      {{ game.price / 100 }} {{ game.price_currency }}
+                  {% endif %}
+              </span></div>
+              <p>
+                  <a class="btn btn-round btn-danger" role="button" href="/product_steam_page/{{ game.app_id }}"> View on Steam </a>
+              </p>
+          </div>
+      </div>
+</section>
+</div>
+</div>
+
+{% endblock %}
